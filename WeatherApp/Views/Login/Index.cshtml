@@ -1,0 +1,74 @@
+﻿@model WeatherApp.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<h2>Login</h2>
+
+@using (Html.BeginForm("Login", "Login", FormMethod.Post))
+{
+    
+    @Html.AntiForgeryToken()         
+    @Html.ValidationSummary(true)
+    if (@ViewBag.Message != null)
+    {
+        <div style="border:1px solid red">
+            @ViewBag.Message
+        </div>
+    }
+    <table>
+        <tr>
+            <td>@Html.LabelFor(a => a.UserName)</td>
+            <td>@Html.TextBoxFor(a => a.UserName)</td>
+            <td>@Html.ValidationMessageFor(a => a.UserName)</td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(a => a.Password)
+            </td>
+            <td>
+                @Html.PasswordFor(a => a.Password)
+            </td>
+            <td>
+                @Html.ValidationMessageFor(a => a.Password)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input id="btnSubmit" type="button" value="Login" />
+            </td>
+            <td></td>
+        </tr>
+    </table>
+}
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+
+            if ($("#UserName").val() == "fconde" && $("#Password").val() == "123") {
+                $.ajax({
+                    type: "POST",
+                    url: "/Login/Login",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        localStorage.setItem('Usuario', $("#UserName").val());
+                        localStorage.setItem('Password', $("#Password").val());
+                        window.location.href = response.Url;
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+@* This below line is for create javascript section *@
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

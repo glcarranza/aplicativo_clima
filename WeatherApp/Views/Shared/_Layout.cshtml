@@ -6,37 +6,271 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body{
+            background-color:lightgrey;
+        }
+        .navbar{
+            background-color:salmon!important;
+            height:30px;
+        }
+        .arrow-up{
+            width:0px;
+            height:0px;
+            position:absolute;
+            border-left:20px solid transparent;
+            border-right:20px solid transparent;
+            border-bottom:20px solid #fff;
+            right:151px;
+            top:50px;
+        }
+        .login-form{
+            position:absolute;
+            width:300px;
+            height:200px;
+            background:#fff;
+            right: 75px;
+            top: 30px;
+            border-radius:3px;
+            border-bottom:5px solid gray;
+            display:none;
+        }
+        .login-form>form{
+            width:250px;
+            margin:25px auto;
+            font-size:20px;
+            font-family:sans-serif,Arial;
+            color:gray;
+            letter-spacing: -0.05em;
+        }
+        input[type="text"], input[type="password"]{
+            width:220px;
+            height:30px;
+            border-color: #ededed;
+            outline: none;
+            box-shadow: inset 0 0 10px #eee;
+            border-radius:3px;
+           margin-left: 40px;
+        }
+        input[type="button"]
+        {
+             margin-top: 15px;
+             margin-left: 40px;
+             width:220px;
+             height:35px;
+             font-size:12px;
+             font-weight:bold;
+             font-family:sans-serif,Arial;
+             outline:none;
+                border:0px;
+                border-radius:3px;
+                 letter-spacing: -0.05em;
 
+        }
+         input[type="button"]:hover{
+             background: salmon;
+             height:30px;
+         }
+         .imgLogin{
+                 width: 15px;
+    background-color: white;
+    margin-top: -6px;
+         }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <p style="color:white;padding-top:10px;"><img src="~/Images/logo.png" style="width:20px;" />AMERICA VIRTUAL</p>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+        <aside style="width:200px;height:65px;float:right;padding-top:10px;">
+            <div style="width:200px;height:65px;float:right;">
+                <a style="color:white" href="#" id="login">INICIAR SESIÓN</a>
+                <img class="imgLogin" src="~/Images/user-icon-png-transparent-3.jpg" />
             </div>
+            <div>
+                <label id="lblWelcome" style="color:blue; font-size:11px;"></label>
+            </div>
+           
+        </aside>
+          <form class="login-form">
+              <label style="margin-left: 40px;">Usuario</label>
+              <div>
+                  <input id="Username" type="text" required />
+              </div>
+              <label style="margin-left: 40px;">Contraseña</label>
+              <div>
+                  <input id="Password" type="password" required />
+              </div>
+              <div>
+                  <input id="btnLogin" type="button" style="background-color:salmon;color:white" value="INICIAR SESION" onclick="iniciarSesion()" />
+              </div>
+              <div>
+                  <label id="lblError" style="margin-left: 40px;color:red"></label>
+              </div>
+          </form>
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            @*<p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>*@
         </footer>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var form = $(".login-form");
+            var status = false;
+            $("#login").click(function (event) {
+                event.preventDefault();
+                if (status == false) {
+                    form.fadeIn();
+                    status = true;
+                }
+                else {
+                    form.fadeOut();
+                    status = false;
+                }
+            })
 
+            $.ajax({
+                type: "Get",
+                url: "Home/GetPaises",
+                dataType: 'json',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#pais').append('<option value=' + data[i].IdPais + '>' + data[i].Pais + '</option > ');
+                    }
+                }
+            });
+
+            $('#pais').change(function () {
+                $('#ciudad').children().remove().end().append('<option selected value="0">Seleccione una Opcion</option>');
+                var value = $('#pais').val();
+                if (value != 0) {
+                    $.ajax({
+                        type: "Get",
+                        url: "Home/GetCiudades/",
+                        data: {IdPais: value},
+                        dataType: 'json',
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                $('#ciudad').append('<option value=' + data[i].IdCiudad + '>' + data[i].Ciudad + '</option > ');
+                            }
+                        }
+                    });
+                }
+                else {
+
+                }
+
+              
+            })
+
+
+            $('#btnBuscar').click(function () {
+                var valuepais = $('#pais').val();
+                var valueciudad = $('#ciudad').val();
+                $.ajax({
+                    type: "Get",
+                    url: "Home/GetClimaPorPaisCiudad",
+                    data: { IdPais: valuepais, IdCiudad: valueciudad },
+                    dataType: 'json',
+                    success: function (data) {
+                        //Obtengo el dia actual
+                        var diaActual = GetDiaActual();
+                        for (var i = 0; i < data.length; i++) {
+                            if (diaActual == data[i].Dia.trim()) {
+                                $("#paisactual").text($("#pais option:selected").html());
+                                $("#ciudadactual").text($("#ciudad option:selected").html());
+                                $("#diaactual").text(data[i].Dia.trim());
+                                $("#estadoactual").text(data[i].Icono.trim());
+                                $("#temperaturaactualc").text(data[i].Temperatura_grados_c.trim());
+                                $("#temperaturaactualf").text(data[i].Temperatura_grados_f.trim());
+                                $("#lluviasactual").text("Prob. de lluvias: " + data[i].Prob_precip.trim());
+                                $("#humedadactual").text("Humedad: " + data[i].Humedad.trim());
+                                $("#vientoactual").text("Viento a " + data[i].Viento);
+                                
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgactual').attr('src', newSrc);
+
+
+                            }
+                            if (data[i].Dia.trim() == "LUNES") {
+                                $("#lunes").text(data[i].Dia.trim());
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgLunes').attr('src', newSrc);
+                                $("#gradosclunes").text(data[i].Temperatura_grados_c.trim());
+                                $("#gradosflunes").text(data[i].Temperatura_grados_f.trim());
+                            }
+                            if (data[i].Dia.trim() == "MARTES") {
+                                $("#martes").text(data[i].Dia.trim());
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgMartes').attr('src', newSrc);
+                                $("#gradoscmartes").text(data[i].Temperatura_grados_c.trim());
+                                $("#gradosfmartes").text(data[i].Temperatura_grados_f.trim());
+                            }
+                            if (data[i].Dia.trim() == "MIERCOLES") {
+                                $("#miercoles").text(data[i].Dia.trim());
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgMiercoles').attr('src', newSrc);
+                                $("#gradoscmiercoles").text(data[i].Temperatura_grados_c.trim());
+                                $("#gradosfmiercoles").text(data[i].Temperatura_grados_f.trim());
+                            }
+                            if (data[i].Dia.trim() == "JUEVES") {
+                                $("#jueves").text(data[i].Dia.trim());
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgJueves').attr('src', newSrc);
+                                $("#gradoscjueves").text(data[i].Temperatura_grados_c.trim());
+                                $("#gradosfjueves").text(data[i].Temperatura_grados_f.trim());
+                            }
+                            if (data[i].Dia.trim() == "VIERNES") {
+                                $("#viernes").text(data[i].Dia.trim());
+                                var newSrc = "Images/" + data[i].Icono.trim() + ".png";
+                                $('#imgViernes').attr('src', newSrc);
+                                $("#gradoscviernes").text(data[i].Temperatura_grados_c.trim());
+                                $("#gradosfviernes").text(data[i].Temperatura_grados_f.trim());
+                            }
+                        }
+                    }
+                });
+            })
+        })
+        function iniciarSesion() {
+            var form = $(".login-form");
+            if ($("#Username").val() == "americavirtual@gmail.com" && $("#Password").val() == "123") {
+                        localStorage.setItem('Usuario', $("#Username").val());
+                        localStorage.setItem('Password', $("#Password").val());
+                        form.fadeOut();
+                        $("#lblWelcome").text("Bienvenido: " + localStorage.getItem("Usuario"))
+                    }
+                    else {
+                        $("#lblError").text("Usuario y/o contraseña incorrectos");
+                    }
+        }
+        function GetDiaActual() {
+            var d = new Date();
+            var n = d.getDay()
+            switch (n) {
+                case 1:
+                    return "LUNES";
+                case 2:
+                    return "MARTES";
+                case 3:
+                    return "MIERCOLES";
+                case 4 :
+                    return "JUEVES";
+                case 5:
+                    return "VIERNES";
+                default:
+                    return "NO DISPONBLE"
+            }
+        }
+       
+    </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

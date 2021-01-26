@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AmericaVirtual_WeatherModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Ciudades">
+          <Key>
+            <PropertyRef Name="IdCiudad" />
+          </Key>
+          <Property Name="IdCiudad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPais" Type="int" Nullable="false" />
+          <Property Name="Ciudad" Type="nchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ClimaPorPaisCiudad">
+          <Key>
+            <PropertyRef Name="IdClima" />
+          </Key>
+          <Property Name="IdClima" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPais" Type="int" />
+          <Property Name="IdCiudad" Type="nchar" MaxLength="10" />
+          <Property Name="Dia" Type="nchar" MaxLength="50" />
+          <Property Name="Temperatura_grados_c" Type="nchar" MaxLength="10" />
+          <Property Name="Temperatura_grados_f" Type="nchar" MaxLength="10" />
+          <Property Name="Prob_precip" Type="nchar" MaxLength="10" />
+          <Property Name="Humedad" Type="nchar" MaxLength="10" />
+          <Property Name="Viento" Type="nchar" MaxLength="10" />
+          <Property Name="Icono" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Paises">
+          <Key>
+            <PropertyRef Name="IdPais" />
+          </Key>
+          <Property Name="IdPais" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Pais" Type="nchar" MaxLength="50" />
+        </EntityType>
+        <EntityContainer Name="AmericaVirtual_WeatherModelStoreContainer">
+          <EntitySet Name="Ciudades" EntityType="Self.Ciudades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClimaPorPaisCiudad" EntityType="Self.ClimaPorPaisCiudad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Paises" EntityType="Self.Paises" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AmericaVirtual_WeatherModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Ciudades">
+          <Key>
+            <PropertyRef Name="IdCiudad" />
+          </Key>
+          <Property Name="IdCiudad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPais" Type="Int32" Nullable="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ClimaPorPaisCiudad">
+          <Key>
+            <PropertyRef Name="IdClima" />
+          </Key>
+          <Property Name="IdClima" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPais" Type="Int32" />
+          <Property Name="IdCiudad" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Dia" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Temperatura_grados_c" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Temperatura_grados_f" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Prob_precip" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Humedad" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Viento" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Icono" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Paises">
+          <Key>
+            <PropertyRef Name="IdPais" />
+          </Key>
+          <Property Name="IdPais" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Pais" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="AmericaVirtual_WeatherEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ciudades" EntityType="Self.Ciudades" />
+          <EntitySet Name="ClimaPorPaisCiudad" EntityType="Self.ClimaPorPaisCiudad" />
+          <EntitySet Name="Paises" EntityType="Self.Paises" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AmericaVirtual_WeatherModelStoreContainer" CdmEntityContainer="AmericaVirtual_WeatherEntities">
+          <EntitySetMapping Name="Ciudades">
+            <EntityTypeMapping TypeName="AmericaVirtual_WeatherModel.Ciudades">
+              <MappingFragment StoreEntitySet="Ciudades">
+                <ScalarProperty Name="IdCiudad" ColumnName="IdCiudad" />
+                <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClimaPorPaisCiudad">
+            <EntityTypeMapping TypeName="AmericaVirtual_WeatherModel.ClimaPorPaisCiudad">
+              <MappingFragment StoreEntitySet="ClimaPorPaisCiudad">
+                <ScalarProperty Name="IdClima" ColumnName="IdClima" />
+                <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+                <ScalarProperty Name="IdCiudad" ColumnName="IdCiudad" />
+                <ScalarProperty Name="Dia" ColumnName="Dia" />
+                <ScalarProperty Name="Temperatura_grados_c" ColumnName="Temperatura_grados_c" />
+                <ScalarProperty Name="Temperatura_grados_f" ColumnName="Temperatura_grados_f" />
+                <ScalarProperty Name="Prob_precip" ColumnName="Prob_precip" />
+                <ScalarProperty Name="Humedad" ColumnName="Humedad" />
+                <ScalarProperty Name="Viento" ColumnName="Viento" />
+                <ScalarProperty Name="Icono" ColumnName="Icono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Paises">
+            <EntityTypeMapping TypeName="AmericaVirtual_WeatherModel.Paises">
+              <MappingFragment StoreEntitySet="Paises">
+                <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+                <ScalarProperty Name="Pais" ColumnName="Pais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
